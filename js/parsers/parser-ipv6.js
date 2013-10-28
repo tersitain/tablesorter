@@ -73,4 +73,4 @@
 		type: "numeric"
 	});
 
-})(jQuery);
+})(window.jQuery || window.Zepto);

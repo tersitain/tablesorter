@@ -10,7 +10,6 @@ ipv6test = function(result, str, expect){
 	}
 },
 ipv6tests = function(){
-
 	test( "ipv6 parser", function() {
 		expect(483);
 

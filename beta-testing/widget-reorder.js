@@ -7,7 +7,7 @@
 ;(function($){
 	"use strict";
 
-$.tablesorter.addWidget({
+$.tablesorter.widget.add({
 	id: 'reorder',
 	priority: 70,
 	options : {
@@ -76,7 +76,7 @@ $.tablesorter.addWidget({
 					if (endIndex >= 0 && lastIndx === endIndex) { return false; }
 					lastIndx = endIndex;
 					if (c.debug) {
-						ts.log( endIndex === 0 ? 'target before column 0' : endIndex === len ? 'target after last column' : 'target between columns ' + startIndex + ' and ' + endIndex);
+						ts.utility.log( endIndex === 0 ? 'target before column 0' : endIndex === len ? 'target after last column' : 'target between columns ' + startIndex + ' and ' + endIndex);
 					}
 					$bar.css('left', offsets[i-1]);
 					return false;
@@ -98,7 +98,7 @@ $.tablesorter.addWidget({
 			if ( s > -1 && endIndex > -1 && s != endIndex && s + 1 !== endIndex ) {
 				adj = endIndex !== 0;
 				if (c.debug) {
-					ts.log( 'Inserting column ' + s + (adj ? ' after' : ' before') + ' column ' + (endIndex - adj ? 1 : 0) );
+					ts.utility.log( 'Inserting column ' + s + (adj ? ' after' : ' before') + ' column ' + (endIndex - adj ? 1 : 0) );
 				}
 				rows.each(function() {
 					cols = $(this).children();
@@ -132,7 +132,7 @@ $.tablesorter.addWidget({
 			}, wo.reorder_delay);
 		};
 
-		console.log( c.$headers.last().hasClass(noReorderLast) );
+		// console.log( c.$headers.last().hasClass(noReorderLast) );
 
 		if ( c.$headers.last().hasClass(noReorderLast) ) {
 			offsets.push( offsets[ offsets.length - 1 ] );
@@ -176,7 +176,14 @@ $.tablesorter.addWidget({
 	}
 });
 
-// add mouse coordinates
-$x = $('#main h1:last'); $(document).mousemove(function(e){ $x.html( e.pageX ); });
+/*
+$(function(){
+	// add mouse coordinates
+	var $x = $('#main h1').eq(-1);
+	$(document).mousemove(function(e){
+		$x.html( e.pageX );
+	});
+});
+*/
 
 })(jQuery);

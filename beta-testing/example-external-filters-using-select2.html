@@ -65,7 +65,7 @@
 					filters[i] = v || $item.val() || '';
 				});
 				// start search
-				$.tablesorter.setFilters($t, filters, true);
+				$.tablesorter.utility.setFilters($t, filters, true);
 			};
 
 			// hide filter row completely
@@ -110,7 +110,7 @@
 	<h1>table<em>sorter</em></h1>
 	<h2>External Filters + select2</h2>
 	<h3>Flexible client-side table sorting</h3>
-	<a href="index.html">Back to documentation</a>
+	<a href="../docs/index.html">Back to documentation</a>
 </div>
 <div id="main">
 

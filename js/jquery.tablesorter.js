@@ -18,7 +18,7 @@
 /*global console:false, alert:false */
 !(function($) {
 "use strict";
-var ts = $.tablesorter = {
+var ts = $.tablesorter = $.extend({}, $.tablesorter, {
 
 	version: "3.0.0 beta",
 
@@ -83,8 +83,7 @@ var ts = $.tablesorter = {
 		cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 
 		// *** selectors
-		selectorHeaders  : '> thead th, > thead td',
-		selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
+		selectorSort     : 'th, td',   // jQuery selector of content within headers that is clickable to trigger a sort
 		selectorRemove   : '.remove-me',
 
 		// *** advanced
@@ -293,7 +292,7 @@ var ts = $.tablesorter = {
 				time = new Date();
 			}
 			i = c.cssIcon ? '<i class="' + c.cssIcon + ' ' + ts.css.icon + '"></i>' : ''; // add icon if cssIcon option exists
-			c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
+			c.$headers = $(table).children('thead').children('tr').children('th, td').each(function(index) {
 				that = this;
 				$t = $(that);
 				ch = c.headers[index];
@@ -350,7 +349,7 @@ var ts = $.tablesorter = {
 					// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
 					h = c.$headers.filter(':not([colspan])');
 					h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
-						.filter('[data-column="' + i + '"]:last');
+						.filter('[data-column="' + i + '"]').eq(-1);
 					ch = c.headers[i];
 					// get column parser
 					p = tsp.get( tsu.getData(h, ch, 'sorter') );
@@ -446,8 +445,8 @@ var ts = $.tablesorter = {
 			c.$headers
 			// http://stackoverflow.com/questions/5312849/jquery-find-self;
 			.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) )
-			.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter')
-			.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
+			.off('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter')
+			.on('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
 				// only recognize left clicks or enter
 				if ( ((e.which || e.button) !== 1 && !/sort|keypress/.test(e.type)) || (e.type === 'keypress' && e.which !== 13) ) {
 					return;
@@ -460,8 +459,7 @@ var ts = $.tablesorter = {
 					return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 				}
 				if (c.delayInit && tsu.isEmptyObject(c.cache)) { tsb.cache(table); }
-				// jQuery v1.2.6 doesn't have closest()
-				var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':first'), cell = $cell[0];
+				var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).closest('th, td'), cell = $cell[0];
 				if (!cell.sortDisabled) {
 					tss.init(table, cell, e);
 				}
@@ -470,7 +468,7 @@ var ts = $.tablesorter = {
 				// cancel selection
 				c.$headers
 					.attr('unselectable', 'on')
-					.bind('selectstart', false)
+					.on('selectstart', false)
 					.css({
 						'user-select': 'none',
 						'MozUserSelect': 'none' // not needed for jQuery 1.8+
@@ -478,15 +476,15 @@ var ts = $.tablesorter = {
 			}
 			// apply easy methods that trigger bound events
 			$this
-			.unbind('sortReset update updateRows updateCell updateAll addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
-			.bind("sortReset.tablesorter", function(e){
+			.off('sortReset update updateRows updateCell updateAll addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
+			.on("sortReset.tablesorter", function(e){
 				e.stopPropagation();
 				c.sortList = [];
 				tss.setHeadersCss(table);
 				tss.multi(table);
 				tss.append(table);
 			})
-			.bind("updateAll.tablesorter", function(e, resort, callback){
+			.on("updateAll.tablesorter", function(e, resort, callback){
 				e.stopPropagation();
 				tsw.refresh(table, true, true);
 				tss.restoreHeaders(table);
@@ -494,20 +492,19 @@ var ts = $.tablesorter = {
 				tss.bindEvents(table);
 				tss.update(table, resort, callback);
 			})
-			.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
+			.on("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
 				e.stopPropagation();
 				tsw.update(table, resort, callback);
 			})
-			.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
+			.on("updateCell.tablesorter", function(e, cell, resort, callback) {
 				e.stopPropagation();
 				$this.find(c.selectorRemove).remove();
 				// get position from the dom
 				var l, row, icell,
 				$tb = $this.find('tbody'),
 				// update cache - format: function(s, table, cell, cellIndex)
-				// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
-				tbdy = $tb.index( $(cell).parents('tbody').filter(':first') ),
-				$row = $(cell).parents('tr').filter(':first');
+				tbdy = $tb.index( $(cell).closest('tbody') ),
+				$row = $(cell).closest('tr');
 				cell = $(cell)[0]; // in case cell is a jQuery object
 				// tbody may not exist if update is initialized while tbody is removed for processing
 				if ($tb.length && tbdy >= 0) {
@@ -519,11 +516,11 @@ var ts = $.tablesorter = {
 					tss.checkResort($this, resort, callback);
 				}
 			})
-			.bind("addRows.tablesorter", function(e, $row, resort, callback) {
+			.on("addRows.tablesorter", function(e, $row, resort, callback) {
 				e.stopPropagation();
 				var i, rows = $row.filter('tr').length,
 				dat = [], l = $row[0].cells.length,
-				tbdy = $this.find('tbody').index( $row.parents('tbody').filter(':first') );
+				tbdy = $this.find('tbody').index( $row.closest('tbody') );
 				// fixes adding rows to an empty table - see issue #179
 				if (!c.parsers) {
 					tsb.parsers(table);
@@ -544,7 +541,7 @@ var ts = $.tablesorter = {
 				// resort using current settings
 				tss.checkResort($this, resort, callback);
 			})
-			.bind("sorton.tablesorter", function(e, list, callback, init) {
+			.on("sorton.tablesorter", function(e, list, callback, init) {
 				var c = table.config;
 				e.stopPropagation();
 				$this.trigger("sortStart", this);
@@ -562,27 +559,27 @@ var ts = $.tablesorter = {
 					callback(table);
 				}
 			})
-			.bind("appendCache.tablesorter", function(e, callback, init) {
+			.on("appendCache.tablesorter", function(e, callback, init) {
 				e.stopPropagation();
 				tss.append(table, init);
 				if (typeof callback === "function") {
 					callback(table);
 				}
 			})
-			.bind("applyWidgetId.tablesorter", function(e, id) {
+			.on("applyWidgetId.tablesorter", function(e, id) {
 				e.stopPropagation();
 				tsw.get(id).format(table, c, c.widgetOptions);
 			})
-			.bind("applyWidgets.tablesorter", function(e, init) {
+			.on("applyWidgets.tablesorter", function(e, init) {
 				e.stopPropagation();
 				// apply widgets
 				tsw.apply(table, init);
 			})
-			.bind("refreshWidgets.tablesorter", function(e, all, dontapply){
+			.on("refreshWidgets.tablesorter", function(e, all, dontapply){
 				e.stopPropagation();
 				tsw.refresh(table, all, dontapply);
 			})
-			.bind("destroy.tablesorter", function(e, c, cb){
+			.on("destroy.tablesorter", function(e, c, cb){
 				e.stopPropagation();
 				tss.destroy(table, c, cb);
 			});
@@ -652,7 +649,8 @@ var ts = $.tablesorter = {
 				// direction = 2 means reset!
 				if (list[i][1] !== 2) {
 					// multicolumn sorting updating - choose the :last in case there are nested columns
-					f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
+					f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]');
+					if (l === 1) { f = f.eq(-1); }
 					if (f.length) {
 						for (j = 0; j < f.length; j++) {
 							if (!f[j].sortDisabled) {
@@ -975,7 +973,7 @@ var ts = $.tablesorter = {
 		restoreHeaders: function(table){
 			var c = table.config;
 			// don't use c.$headers here in case header cells were swapped
-			c.$table.find(c.selectorHeaders).each(function(i){
+			c.$table.children('thead').children().children('th, td').each(function(i){
 				// only restore header cells if it is wrapped
 				// because this is also used by the updateAll method
 				if ($(this).find('.tablesorter-header-inner').length){
@@ -990,19 +988,19 @@ var ts = $.tablesorter = {
 			// remove all widgets
 			tsw.refresh(table, true, true);
 			var $t = $(table), c = table.config,
-			$h = $t.find('thead:first'),
+			$h = $t.find('thead').eq(0),
 			$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
-			$f = $t.find('tfoot:first > tr').children('th, td');
+			$f = $t.find('tfoot').eq(0).children('tr').children('th, td');
 			// remove widget added rows, just in case
 			$h.find('tr').not($r).remove();
 			// disable tablesorter
 			$t
 				.removeData('tablesorter')
-				.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
+				.off('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
 			c.$headers.add($f)
 				.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc].join(' ') )
 				.removeAttr('data-column');
-			$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter keypress.tablesorter');
+			$r.find(c.selectorSort).off('mousedown.tablesorter mouseup.tablesorter keypress.tablesorter');
 			tss.restoreHeaders(table);
 			if (removeClasses !== false) {
 				$t.removeClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme);
@@ -1038,7 +1036,7 @@ var ts = $.tablesorter = {
 			var matrix = [],
 			lookup = {},
 			cols = 0, // determine the number of columns
-			trs = $(t).find('thead:eq(0), tfoot').children('tr'), // children tr in tfoot - see issue #196
+			trs = $(t).children('thead, tfoot').children('tr'), // children tr in tfoot - see issue #196
 			i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
 			for (i = 0; i < trs.length; i++) {
 				cells = trs[i].cells;
@@ -1290,14 +1288,14 @@ var ts = $.tablesorter = {
 		// make sure to store the config object
 		table.config = c;
 		// save the settings where they read
-		$.data(table, "tablesorter", c);
-		if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
+		$this.data('tablesorter', c);
+		if (c.debug) { $this.data('startoveralltimer', new Date()); }
 
 		// removing this in version 3 (only supports jQuery 1.7+)
-		c.supportsDataObject = (function(version) {
+		c.supportsDataObject = $.fn.jquery ? (function(version) {
 			version[0] = parseInt(version[0], 10);
 			return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
-		})($.fn.jquery.split("."));
+		})($.fn.jquery.split(".")) : true;
 		// digit sort text location;
 		c.string = { 'max': 1, 'min': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 		// add table theme class only if there isn't already one there
@@ -1339,8 +1337,8 @@ var ts = $.tablesorter = {
 		// show processesing icon
 		if (c.showProcessing) {
 			$this
-			.unbind('sortBegin.tablesorter sortEnd.tablesorter')
-			.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
+			.off('sortBegin.tablesorter sortEnd.tablesorter')
+			.on('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
 				tsu.isProcessing(table, e.type === 'sortBegin');
 			});
 		}
@@ -1349,7 +1347,7 @@ var ts = $.tablesorter = {
 		table.hasInitialized = true;
 		table.isProcessing = false;
 		if (c.debug) {
-			benchmark("Overall initialization time", $.data( table, 'startoveralltimer'));
+			benchmark("Overall initialization time", c.$table.data('startoveralltimer'));
 		}
 		$this.trigger('tablesorter-initialized', table);
 		if (typeof c.initialized === 'function') { c.initialized(table); }
@@ -1359,7 +1357,7 @@ var ts = $.tablesorter = {
 	parsers: [],
 	widgets: []
 
-};
+});
 
 	$.fn.tablesorter = function(options, callback, resort) {
 		return this.each(function(){
@@ -1593,4 +1591,4 @@ var ts = $.tablesorter = {
 		}
 	});
 
-})(jQuery);
+})(window.jQuery || window.Zepto);

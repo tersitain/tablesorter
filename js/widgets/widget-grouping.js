@@ -125,7 +125,7 @@ ts.widget.add({
 					}
 				}
 			}
-			$tr = c.$table.find('tr.group-header').bind('selectstart', false);
+			$tr = c.$table.find('tr.group-header').on('selectstart', false);
 			if (wo.group_count || $.isFunction(wo.group_callback)) {
 				$tr.each(function(){
 					var $rows,

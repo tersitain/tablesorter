@@ -383,7 +383,8 @@
 		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a></li>
 		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a></li>
 		<li><a href="http://codepen.io/Mottie/pen/eqBbn">tableSorter LESS theme; modify the colors dynamically in this LESS theme demo!</a></li>
-		<li class="beta"> pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
+		<li class="beta"><a href="../beta-testing/zepto.html">Testing Zepto</a></li>
+		<li class="beta">pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
 		<li class="beta"> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
 		<li class="beta"> <a href="../beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
 		<li class="beta"> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
@@ -3282,7 +3283,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
   // bind to initialized event BEFORE initializing tablesorter
   $("table")
-    .bind("tablesorter-initialized",function(e, table) {
+    .on("tablesorter-initialized",function(e, table) {
       // do something after tablesorter has initialized
     });
 
@@ -3309,7 +3310,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
   $("table").tablesorter();
 
   // bind to sort events
-  $("table").bind("sortBegin",function(e, table) {
+  $("table").on("sortBegin",function(e, table) {
     // do something crazy!
   });
 });</pre></div>
@@ -3328,10 +3329,10 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
   // bind to sort events
   $("table")
-    .bind("sortStart",function(e, table) {
+    .on("sortStart",function(e, table) {
       $("#overlay").show();
     })
-    .bind("sortEnd",function(e, table) {
+    .on("sortEnd",function(e, table) {
       $("#overlay").hide();
     });
 });</pre></div>
@@ -3350,10 +3351,10 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
   // bind to sort events
   $("table")
-    .bind("sortStart",function(e, table) {
+    .on("sortStart",function(e, table) {
       $("#overlay").show();
     })
-    .bind("sortEnd",function(e, table) {
+    .on("sortEnd",function(e, table) {
       $("#overlay").hide();
     });
 });</pre></div>
@@ -3373,7 +3374,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
   // bind to sort events
   $("table")
-    .bind("updateComplete",function(e, table) {
+    .on("updateComplete",function(e, table) {
       // do something after the table has been altered;
     });
 });</pre></div>
@@ -3396,7 +3397,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 				<td>Event triggered when the filter widget has finished initializing (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to modify the filter elements (row, inputs and/or selects) as desired. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
-  $('table').bind('filterInit', function(){
+  $('table').on('filterInit', function(){
     $(this).find('tr.tablesorter-filter-row').addClass('fred');
   });
 });</pre></div>
@@ -3409,7 +3410,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 				<td>Event triggered when the filter widget has started processing the search (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to do something like add a class to the filter row. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
-  $('table').bind('filterStart', function(){
+  $('table').on('filterStart', function(){
     $(this).find('tr.tablesorter-filter-row').addClass('filtering');
   });
 });</pre></div>
@@ -3422,7 +3423,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 				<td>Event triggered when the filter widget has finished processing the search (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to do something like remove the class added to the filter row when the filtering started. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
-  $('table').bind('filterEnd', function(){
+  $('table').on('filterEnd', function(){
     $(this).find('tr.tablesorter-filter-row').removeClass('filtering');
   });
 });</pre></div>
@@ -3435,7 +3436,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 				<td>Event triggered when the stickyHeader widget has finished initializing (<span class="version">v2.10.4</span>).
 					<div class="collapsible"><br>
 						You can use this event to do something like modify content within the sticky header:<pre class="prettyprint lang-javascript">$(function(){
-  $('table').bind('stickyHeadersInit', function(){
+  $('table').on('stickyHeadersInit', function(){
     // this.config.widgetOptions.$sticky contains the entire sticky header table
     this.config.widgetOptions.$sticky.find('tr.tablesorter-headerRow').addClass('sticky-styling');
   });
@@ -3469,7 +3470,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pagerChange pagerComplete', function(e,c){
+    .on('pagerChange pagerComplete', function(e,c){
       // c.totalPages contains the total number of pages
       $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
     });
@@ -3495,7 +3496,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pagerChange pagerComplete', function(e,c){
+    .on('pagerChange pagerComplete', function(e,c){
       // c.totalPages contains the total number of pages
       $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
     });
@@ -3517,7 +3518,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     .tablesorter()
 
     // bind to pager initialized event BEFORE calling the addon
-    .bind('pagerBeforeInitialized', function(e, c){
+    .on('pagerBeforeInitialized', function(e, c){
       // e = event object; c = pager options
     })
 
@@ -3543,7 +3544,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     .tablesorter()
 
     // bind to pager initialized event BEFORE calling the addon
-    .bind('pagerInitialized', function(e, c){
+    .on('pagerInitialized', function(e, c){
       // c.totalPages contains the total number of pages
       $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
     })
@@ -3576,7 +3577,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pageMoved', function(e, c){
+    .on('pageMoved', function(e, c){
       // c.totalPages contains the total number of pages
       $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
     });

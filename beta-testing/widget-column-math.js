@@ -9,12 +9,12 @@
 
 var ts = $.tablesorter = $.tablesorter || {};
 
-	ts.columnMath = {
+	ts.utility.columnMath = {
 
 		equations : {
 			// sum all the cells in the row
 			sumrow   : function(table, $el, c, wo, direct){
-				var total = 0, row = ts.columnMath.getRow(table, $el, direct);
+				var total = 0, row = ts.utility.columnMath.getRow(table, $el, direct);
 				$.each( row, function(i){
 					total += row[i];
 				});
@@ -47,8 +47,8 @@ var ts = $.tablesorter = $.tablesorter || {};
 				row = c.cache[bIndex].normalized[rIndex] || [];
 			if (direct) {
 				arry = $row.children().map(function(){
-					txt = (c.supportsTextContent) ? this.textContent : $(this).text();
-					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+					txt = this.textContent || $(this).text();
+					txt = ts.utility.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
 					return isNaN(txt) ? 0 : txt;
 				}).get();
 			} else {
@@ -60,7 +60,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 		},
 
 		output : function($el, wo, value) {
-			value = wo.columnMath_format.output_prefix + ts.columnMath.addCommas(value, wo) + wo.columnMath_format.output_suffix;
+			value = wo.columnMath_format.output_prefix + ts.utility.columnMath.addCommas(value, wo) + wo.columnMath_format.output_suffix;
 			if ($.isFunction(wo.columnMath_format.format_complete)) {
 				value = wo.columnMath_format.format_complete(value, $el);
 			}
@@ -78,7 +78,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 				wo.columnMath_regex = new RegExp('(\\d)(?=(\\d{' + (wo.columnMath_format.thousands_grouping || 3) + '})+(?!\\d))', 'g' );
 				var n, t, $t,
 					priority = [ 'sumrow', 'sumabove', 'sumcol', 'sumall' ],
-					eq = ts.columnMath.equations,
+					eq = ts.utility.columnMath.equations,
 					dat = 'data-' + (wo.columnMath_data || 'math'),
 					$mathCells = c.$tbodies.find('[' + dat + ']');
 					// cells with a target are calculated last
@@ -90,7 +90,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 						if (eq[n]) {
 							t = eq[n](table, $t, c, wo);
 							if (t) {
-								ts.columnMath.output( $t, wo, t );
+								ts.utility.columnMath.output( $t, wo, t );
 							}
 						}
 					});
@@ -102,7 +102,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 
 	// add new widget called repeatHeaders
 	// ************************************
-	$.tablesorter.addWidget({
+	$.tablesorter.widget.add({
 		id: "column-math",
 		options: {
 			columnMath_data   : 'math',
@@ -119,9 +119,9 @@ var ts = $.tablesorter = $.tablesorter || {};
 		},
 		init : function(table, thisWidget, c, wo){
 			var $t = $(table).bind('update.tsmath updateRow.tsmath', function(){
-				$.tablesorter.columnMath.recalculate(table, c, wo);
+				$.tablesorter.utility.columnMath.recalculate(table, c, wo);
 			});
-			$.tablesorter.columnMath.recalculate(table, c, wo);
+			$.tablesorter.utility.columnMath.recalculate(table, c, wo);
 		},
 		// format is called when the on init and when a sorting has finished
 		format: function(table) {

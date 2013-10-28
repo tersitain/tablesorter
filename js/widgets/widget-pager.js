@@ -186,16 +186,16 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.unbind('filterStart filterEnd sortEnd disable enable destroy update pageSize '.split(' ').join('.pager '))
-			.bind('filterStart.pager', function(e, filters) {
-				$.data(table, 'pagerUpdateTriggered', false);
+			.off('filterStart filterEnd sortEnd disable enable destroy update pageSize '.split(' ').join('.pager '))
+			.on('filterStart.pager', function(e, filters) {
+				c.$table.data('pagerUpdateTriggered', false);
 				p.currentFilters = filters;
 			})
 			// update pager after filter widget completes
-			.bind('filterEnd.pager sortEnd.pager', function(e) {
+			.on('filterEnd.pager sortEnd.pager', function(e) {
 				//Prevent infinite event loops from occuring by setting this in all moveToPage calls and catching it here.
-				if ($.data(table, 'pagerUpdateTriggered')) {
-					$.data(table, 'pagerUpdateTriggered', false);
+				if (c.$table.data('pagerUpdateTriggered')) {
+					c.$table.data('pagerUpdateTriggered', false);
 					return;
 				}
 				//only run the server side sorting if it has been enabled
@@ -205,7 +205,7 @@ tsp = ts.pager = {
 				tsp.updatePageDisplay(table, c, false);
 				tsp.fixHeight(table, c);
 			})
-			.bind('disable.pager', function(e){
+			.on('disable.pager', function(e){
 				e.stopPropagation();
 				tsp.showAllRows(table, c);
 			})
@@ -240,8 +240,8 @@ tsp = ts.pager = {
 		ctrls = [ s.first, s.prev, s.next, s.last ];
 		fxn = [ 'moveToFirstPage', 'moveToPrevPage', 'moveToNextPage', 'moveToLastPage' ];
 		p.$container.find(ctrls.join(','))
-			.unbind('click.pager')
-			.bind('click.pager', function(){
+			.off('click.pager')
+			.on('click.pager', function(){
 				var i,
 					$c = $(this),
 					l = ctrls.length;
@@ -258,8 +258,8 @@ tsp = ts.pager = {
 
 		if ( p.$goto.length ) {
 			p.$goto
-				.unbind('change')
-				.bind('change', function(){
+				.off('change')
+				.on('change', function(){
 					p.page = $(this).val() - 1;
 					tsp.moveToPage(table, p);
 					tsp.updatePageDisplay(table, c, false);
@@ -268,8 +268,8 @@ tsp = ts.pager = {
 
 		if ( p.$size.length ) {
 			p.$size
-				.unbind('change.pager')
-				.bind('change.pager', function() {
+				.off('change.pager')
+				.on('change.pager', function() {
 					p.$size.val( $(this).val() ); // in case there are more than one pagers
 					if ( !$(this).hasClass(wo.pager_css.disabled) ) {
 						tsp.setPageSize(table, parseInt( $(this).val(), 10 ), c);
@@ -304,7 +304,7 @@ tsp = ts.pager = {
 		p.$size.removeClass(wo.pager_css.disabled).removeAttr('disabled');
 		p.$goto.removeClass(wo.pager_css.disabled).removeAttr('disabled');
 		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
+		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr').not('.' + t).length : p.totalRows;
 		p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 			t = (p.size * p.page > p.filteredRows);
@@ -355,10 +355,10 @@ tsp = ts.pager = {
 			$b = c.$tbodies.eq(0);
 		if (wo.pager_fixedHeight) {
 			$b.find('tr.pagerSavedHeightSpacer').remove();
-			h = $.data(table, 'pagerSavedHeight');
+			h = c.$table.data('pagerSavedHeight');
 			if (h) {
 				d = h - $b.height();
-				if ( d > 5 && $.data(table, 'pagerLastSize') === p.size && $b.children('tr:visible').length < p.size ) {
+				if ( d > 5 && c.$table.data('pagerLastSize') === p.size && $b.children('tr:visible').length < p.size ) {
 					$b.append('<tr class="pagerSavedHeightSpacer ' + wo.pager_selectors.remove.replace(/(tr)?\./g,'') + '" style="height:' + d + 'px;"></tr>');
 				}
 			}
@@ -368,9 +368,9 @@ tsp = ts.pager = {
 	changeHeight: function(table, c) {
 		var $b = c.$tbodies.eq(0);
 		$b.find('tr.pagerSavedHeightSpacer').remove();
-		$.data(table, 'pagerSavedHeight', $b.height());
+		c.$table.data('pagerSavedHeight', $b.height());
 		tsp.fixHeight(table, c);
-		$.data(table, 'pagerLastSize', c.pager.size);
+		c.$table.data('pagerLastSize', c.pager.size);
 	},
 
 	hideRows: function(table, c){
@@ -396,7 +396,7 @@ tsp = ts.pager = {
 	hideRowsSetup: function(table, c){
 		var p = c.pager;
 		p.size = parseInt( p.$size.val(), 10 ) || p.size;
-		$.data(table, 'pagerLastSize', p.size);
+		c.$table.data('pagerLastSize', p.size);
 		tsp.pagerArrows(c);
 		if ( !c.widgetOptions.pager_removeRows ) {
 			tsp.hideRows(table, c);
@@ -521,12 +521,12 @@ tsp = ts.pager = {
 			}
 			$doc.on('ajaxError.pager', function(e, xhr, settings, exception) {
 				tsp.renderAjax(null, table, c, xhr, exception);
-				$doc.unbind('ajaxError.pager');
+				$doc.off('ajaxError.pager');
 			});
 			wo.pager_ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 			wo.pager_ajaxObject.success = function(data) {
 				tsp.renderAjax(data, table, c);
-				$doc.unbind('ajaxError.pager');
+				$doc.off('ajaxError.pager');
 				if (typeof p.oldAjaxSuccess === 'function') {
 					p.oldAjaxSuccess(data);
 				}
@@ -617,8 +617,8 @@ tsp = ts.pager = {
 			tsp.pagerArrows(c, true);
 		} else {
 			p.isDisabled = true;
-			$.data(table, 'pagerLastPage', p.page);
-			$.data(table, 'pagerLastSize', p.size);
+			c.$table.data('pagerLastPage', p.page);
+			c.$table.data('pagerLastSize', p.size);
 			p.page = 0;
 			p.size = p.totalRows;
 			p.totalPages = 1;
@@ -652,8 +652,8 @@ tsp = ts.pager = {
 		} else if (!p.ajax) {
 			tsp.renderTable(table, c.rowsCopy);
 		}
-		$.data(table, 'pagerLastPage', p.page);
-		$.data(table, 'pagerUpdateTriggered', true);
+		c.$table.data('pagerLastPage', p.page);
+		c.$table.data('pagerUpdateTriggered', true);
 		if (p.initialized && flag !== false) {
 			c.$table.trigger('pageMoved', c);
 			c.$table.trigger('applyWidgets');
@@ -664,8 +664,8 @@ tsp = ts.pager = {
 		var p = c.pager;
 		p.size = size;
 		p.$size.val(size);
-		$.data(table, 'pagerLastPage', p.page);
-		$.data(table, 'pagerLastSize', p.size);
+		c.$table.data('pagerLastPage', p.page);
+		c.$table.data('pagerLastSize', p.size);
 		p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 		tsp.moveToPage(table, p);
 	},
@@ -702,7 +702,7 @@ tsp = ts.pager = {
 		p.$container.hide(); // hide pager
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
-		c.$table.unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+		c.$table.off('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 		if (ts.storage) {
 			ts.storage(table, 'tablesorter-pager', '');
 		}
@@ -712,8 +712,8 @@ tsp = ts.pager = {
 		var p = c.pager,
 			wo = c.widgetOptions;
 		p.isDisabled = false;
-		p.page = $.data(table, 'pagerLastPage') || p.page || 0;
-		p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size;
+		p.page = c.$table.data('pagerLastPage') || p.page || 0;
+		p.size = c.$table.data('pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size;
 		p.$size.val(p.size); // set page size
 		p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / ( p.size || 10 ) );
 		c.$table.removeClass('pagerDisabled');
@@ -726,11 +726,11 @@ tsp = ts.pager = {
 	},
 
 	appender: function(table, rows) {
-		var p = table.config.pager;
+		var c = table.config, p = c.pager;
 		if ( !p.ajax ) {
-			table.config.rowsCopy = rows;
+			c.rowsCopy = rows;
 			p.totalRows = rows.length;
-			p.size = $.data(table, 'pagerLastSize') || p.size;
+			p.size = c.$table.data('pagerLastSize') || p.size;
 			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 			tsp.moveToPage(table, p);
 			// tsp.renderTable(table, rows);

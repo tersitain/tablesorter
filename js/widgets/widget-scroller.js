@@ -75,16 +75,16 @@ ts.widget.add({
 		var $win = $(window);
 		//Setup window.resizeEnd event
 		$win
-			.bind('resize', ts.window_resize)
-			.bind('resizeEnd', function(e) {
+			.on('resize', ts.window_resize)
+			.on('resizeEnd', function(e) {
 				// init is run before format, so scroller_resizeWidth
 				// won't be defined within the "c" or "wo" parameters
 				if (typeof table.config.widgetOptions.scroller_resizeWidth === 'function') {
 					//IE calls resize when you modify content, so we have to unbind the resize event
 					//so we don't end up with an infinite loop. we can rebind after we're done.
-					$win.unbind('resize', ts.window_resize);
+					$win.off('resize', ts.window_resize);
 					table.config.widgetOptions.scroller_resizeWidth();
-					$win.bind('resize', ts.window_resize);
+					$win.on('resize', ts.window_resize);
 				}
 			});
 	},
@@ -110,15 +110,15 @@ ts.widget.add({
 			$cells = $hdr
 				.wrap('<div class="tablesorter-scroller-header" style="width:' + $tbl.width() + ';" />')
 				.find('.' + ts.css.header)
-				.bind('mousedown', function(){
+				.on('mousedown', function(){
 					this.onselectstart = function(){ return false; };
 					return false;
 				});
 
 			$tbl
 				.wrap('<div class="tablesorter-scroller-table" style="height:' + h + 'px;width:' + $tbl.width() + ';overflow-y:scroll;" />')
-				.unbind('sortEnd.tsScroller')
-				.bind('sortEnd.tsScroller', function(){
+				.off('sortEnd.tsScroller')
+				.on('sortEnd.tsScroller', function(){
 					c.$headers.each(function(i){
 						var t = $cells.eq(i);
 						t
@@ -138,24 +138,24 @@ ts.widget.add({
 				var t = $(this);
 				$cells.eq(i)
 				// clicking on new header will trigger a sort
-				.bind('mouseup', function(e){
+				.on('mouseup', function(e){
 					t.trigger(e, true); // external mouseup flag (click timer is ignored)
 				})
 				// prevent header text selection
-				.bind('mousedown', function(){
+				.on('mousedown', function(){
 					this.onselectstart = function(){ return false; };
 					return false;
 				});
 			});
 
 			// look for filter widget
-			$tbl.bind('filterEnd', function(){
+			$tbl.on('filterEnd', function(){
 				if (flag) { return; }
 				$cells.each(function(i){
 					$(this).find(filterInputs).val( c.$filters.find(filterInputs).eq(i).val() );
 				});
 			});
-			$hdr.find(filterInputs).bind('keyup search', function(e){
+			$hdr.find(filterInputs).on('keyup search', function(e){
 				// ignore arrow and meta keys; allow backspace
 				if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
 				flag = true;
@@ -218,7 +218,7 @@ ts.widget.add({
 
 			t = $tbl.parent().parent().height();
 			// The header will always jump into view if scrolling the table body
-			$tbl.parent().bind('scroll', function(){
+			$tbl.parent().on('scroll', function(){
 				if (wo.scroller_jumpToHeader) {
 					var pos = $win.scrollTop() - $hdr.offset().top;
 					if ($(this).scrollTop() !== 0 && pos < t && pos > 0) {
