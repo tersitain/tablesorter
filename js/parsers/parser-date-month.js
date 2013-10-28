@@ -12,7 +12,7 @@
 	});
 	ts.dates.monthLower = ts.dates.monthCased.join(',').toLocaleLowerCase().split(',');
 
-	ts.addParser({
+	ts.parser.add({
 		id: "month",
 		is: function(){
 			return false;

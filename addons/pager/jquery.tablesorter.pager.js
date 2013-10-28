@@ -404,11 +404,11 @@
 					e = rows.length;
 				}
 				ts.clearTableBody(table);
-				$tb = ts.processTbody(table, table.config.$tbodies.eq(0), true);
+				$tb = ts.utility.processTbody(table, table.config.$tbodies.eq(0), true);
 				for ( i = s; i < e; i++ ) {
 					$tb.append(rows[i]);
 				}
-				ts.processTbody(table, $tb, false);
+				ts.utility.processTbody(table, $tb, false);
 			}
 
 			updatePageDisplay(table, p);

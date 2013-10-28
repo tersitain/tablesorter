@@ -50,7 +50,7 @@ ts.grouping = {
 	}
 };
 
-ts.addWidget({
+ts.widget.add({
 	id: 'group',
 	// run AFTER the zebra widget, so the header rows do not get zebra striping
 	priority: 100,
@@ -144,7 +144,7 @@ ts.addWidget({
 			}
 			c.$table.trigger(wo.group_complete);
 			if (c.debug) {
-				$.tablesorter.benchmark("Applying groups widget: ", time);
+				$.tablesorter.utility.benchmark("Applying groups widget: ", time);
 			}
 		}
 	},

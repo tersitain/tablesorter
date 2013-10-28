@@ -15,7 +15,7 @@
 
 	// Custom parser for parsing input values
 	// updated dynamically using the "change" function below
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id: "inputs",
 		is: function(){
 			return false;
@@ -28,7 +28,7 @@
 
 	// Custom parser for including checkbox status if using the grouping widget
 	// updated dynamically using the "change" function below
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id: "checkbox",
 		is: function(){
 			return false;
@@ -44,7 +44,7 @@
 
 	// Custom parser which returns the currently selected options
 	// updated dynamically using the "change" function below
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id: "select",
 		is: function(){
 			return false;

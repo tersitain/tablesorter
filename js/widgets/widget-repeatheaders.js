@@ -6,7 +6,7 @@
 ;(function($){
 	"use strict";
 
-	$.tablesorter.addWidget({
+	$.tablesorter.widget.add({
 		id: "repeatHeaders",
 		priority: 10,
 		options: {

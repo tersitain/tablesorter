@@ -6,10 +6,11 @@
 ;(function($){
 "use strict";
 
+	var ts = $.tablesorter,
 	// basic list from http://en.wikipedia.org/wiki/List_of_file_formats
 	// To add a custom equivalent, define:
-	// $.tablesorter.fileTypes.equivalents['xx'] = "A|B|C";
-	$.tablesorter.fileTypes = {
+	// $.tablesorter.utility.fileTypes.equivalents['xx'] = "A|B|C";
+	fileTypes = ts.utility.fileTypes = {
 		// divides filetype extensions in the equivalent list below
 		separator : '|',
 		equivalents : {
@@ -34,7 +35,7 @@
 		}
 	};
 
-	$.tablesorter.addParser({
+	ts.parser.add({
 		id: 'filetype',
 		is: function() {
 			return false;
@@ -44,16 +45,16 @@
 				c = table.config,
 				wo = c.widgetOptions,
 				i = s.lastIndexOf('.'),
-				sep = $.tablesorter.fileTypes.separator,
-				m = $.tablesorter.fileTypes.matching,
-				types = $.tablesorter.fileTypes.equivalents;
+				sep = fileTypes.separator,
+				m = fileTypes.matching,
+				types = fileTypes.equivalents;
 			if (!m) {
 				// make a string to "quick" match the existing equivalents
 				var t = [];
 				$.each(types, function(i,v){
 					t.push(v);
 				});
-				m = $.tablesorter.fileTypes.matching = sep + t.join(sep) + sep;
+				m = fileTypes.matching = sep + t.join(sep) + sep;
 			}
 			if (i >= 0) {
 				t = sep + s.substring(i + 1, s.length) + sep;

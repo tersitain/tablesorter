@@ -12,7 +12,7 @@
 	});
 	ts.dates.weekdayLower = ts.dates.weekdayCased.join(',').toLocaleLowerCase().split(',');
 
-	ts.addParser({
+	ts.parser.add({
 		id: "weekday",
 		is: function(){
 			return false;

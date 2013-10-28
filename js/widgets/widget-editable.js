@@ -7,7 +7,7 @@
 ;(function($){
 	"use strict";
 
-	$.tablesorter.addWidget({
+	$.tablesorter.widget.add({
 		id: 'editable',
 		options : {
 			editable_columns       : [],

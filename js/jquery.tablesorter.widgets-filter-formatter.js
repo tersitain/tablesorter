@@ -47,7 +47,7 @@ $.tablesorter.filterFormatter = {
 		updateSpinner = function(ui) {
 			var chkd = true, state,
 				// ui is not undefined on create
-				v = ui && ui.value && $.tablesorter.formatFloat((ui.value + '').replace(/[><=]/g,'')) || $cell.find('.spinner').val() || o.value;
+				v = ui && ui.value && $.tablesorter.utility.formatFloat((ui.value + '').replace(/[><=]/g,'')) || $cell.find('.spinner').val() || o.value;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
@@ -161,7 +161,7 @@ $.tablesorter.filterFormatter = {
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSlider = function(ui) {
 			// ui is not undefined on create
-			var v = typeof ui !== "undefined" ? $.tablesorter.formatFloat((ui.value + '').replace(/[><=]/g,'')) || o.min : o.value,
+			var v = typeof ui !== "undefined" ? $.tablesorter.utility.formatFloat((ui.value + '').replace(/[><=]/g,'')) || o.min : o.value,
 				val = o.compare ? v : v === o.min ? o.allText : v,
 				result = o.compare + val;
 			if (o.valueToHeader) {

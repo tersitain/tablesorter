@@ -9,7 +9,7 @@
 "use strict";
 
 	var iso8601date = /^([0-9]{4})(-([0-9]{2})(-([0-9]{2})(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?$/;
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id : 'iso8601date',
 		is : function(s) {
 			return s.match(iso8601date);

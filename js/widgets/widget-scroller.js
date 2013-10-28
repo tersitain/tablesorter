@@ -62,7 +62,7 @@ $(function(){
 	$(s).appendTo('body');
 });
 
-ts.addWidget({
+ts.widget.add({
 	id: 'scroller',
 	priority: 60, // run after the filter widget
 	options: {

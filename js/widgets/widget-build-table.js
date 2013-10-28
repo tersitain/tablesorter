@@ -8,7 +8,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 	// build a table from data (requires existing <table> tag)
 	// data.header contains an array of header titles
 	// data.rows contains an array of rows which contains an array of cells
-	bt = ts.buildTable = function(tar, c){
+	bt = ts.build.table = function(tar, c){
 		// add table if one doesn't exist
 		var $tbl = tar.tagName === 'TABLE' ? $(tar) : $('<table>').appendTo(tar),
 			table = $tbl[0],
@@ -53,7 +53,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		table.config = c;
 
 		// even if wo.build_type is undefined, we can try to figure out the type
-		if ( !ts.buildTable.hasOwnProperty(typ) && typ !== '' ) {
+		if ( !ts.build.table.hasOwnProperty(typ) && typ !== '' ) {
 			if (c.debug) { ts.log('aborting build table widget, incorrect build type'); }
 			return false;
 		}
@@ -111,7 +111,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		build_objectFooterKey : 'footers'  // object key containing table footers
 	};
 
-	bt.build = {
+	bt.create = {
 		colgroup : function(widths) {
 			var t = '';
 			// add colgroup if widths set
@@ -179,7 +179,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		}
 	};
 
-	bt.buildComplete = function(table, wo){
+	bt.complete = function(table, wo){
 		$(table).trigger(wo.build_complete);
 		ts.setup(table, table.config);
 	};
@@ -222,7 +222,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 			headerCount = 0,
 			error = '',
 			items,
-			tableHTML = bt.build.colgroup( wo.build_headers.widths ) + '<thead>';
+			tableHTML = bt.create.colgroup( wo.build_headers.widths ) + '<thead>';
 
 		$.each(lines, function(n, line) {
 			if ( n >= len - f ) { infooter = true; }
@@ -230,7 +230,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 			if ( (csv ? n >= wo.build_csvStartLine : true) && ( n < r ) ) {
 				h = csv ? bt.splitCSV( line, wo.build_csvSeparator ) : line;
 				headerCount = h.length;
-				tableHTML += bt.build.header(h, wo);
+				tableHTML += bt.create.header(h, wo);
 			} else if ( n >= r ) {
 				// build tbody & tfoot rows
 				if (n === r) {
@@ -248,7 +248,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 							') does not match header count (' + headerCount + ') \n';
 					}
 					c = infooter ? wo.build_footers.classes : '';
-					tableHTML += bt.build.rows(items, wo.build_footers.text, c, wo, printedLines, infooter);
+					tableHTML += bt.create.rows(items, wo.build_footers.text, c, wo, printedLines, infooter);
 				}
 			}
 		});
@@ -257,7 +257,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 			$t.html(error);
 		} else {
 			$t.html(tableHTML);
-			bt.buildComplete(table, wo);
+			bt.complete(table, wo);
 		}
 	};
 
@@ -289,7 +289,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		} else {
 			$t.html(data);
 		}
-		bt.buildComplete(table, wo);
+		bt.complete(table, wo);
 	};
 
 /* ==== Object example ====
@@ -359,7 +359,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 			l = d.length; // header row
 			for ( j = 0; j < l; j++ ) {
 				// cell(cellData, widgetOptions, 'th', first row)
-				t = bt.build.cell(d[j], wo, 'th', j, i === 0);
+				t = bt.create.cell(d[j], wo, 'th', j, i === 0);
 				if (t[0] && t[0].length) { t[0].appendTo( $tr ); } // add cell
 				if (i === 0 && t[1]) { t[1].appendTo( $c ); } // add col to colgroup
 			}
@@ -404,7 +404,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 				l = d.length;
 				for ( j = 0; j < l; j++ ) {
 					// cell(cellData, widgetOptions, 'td')
-					$c = bt.build.cell(d[j], wo, 'td', j);
+					$c = bt.create.cell(d[j], wo, 'td', j);
 					if ($c[0] && $c[0].length) { $c[0].appendTo( $tr ); } // add cell
 				}
 			}
@@ -423,7 +423,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 					l = d.length; // footer cells
 					for ( j = 0; j < l; j++ ) {
 						// cell(cellData, widgetOptions, 'th')
-						$tb = bt.build.cell(d[j], wo, 'th', j);
+						$tb = bt.create.cell(d[j], wo, 'th', j);
 						if ($tb[0] && $tb[0].length) { $tb[0].appendTo( $tr ); } // add cell
 					}
 				});
@@ -431,7 +431,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		}
 
 		$(table).html( $t.html() );
-		bt.buildComplete(table, wo);
+		bt.complete(table, wo);
 	};
 
 	bt.ajax = bt.json = function(table, data, wo) {

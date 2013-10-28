@@ -46,7 +46,7 @@ $(function(){
 				return $.each(rows, function(i,cells) {
 					// similar to using rows[i] = cells.split(',') but the splitCSV script
 					// doesn't split the cell if the separator (comma) is within quotes 
-					rows[i] = $.tablesorter.buildTable.splitCSV(cells, ',');
+					rows[i] = $.tablesorter.build.table.splitCSV(cells, ',');
 				});
 			}
 		}

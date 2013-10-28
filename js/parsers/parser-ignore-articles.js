@@ -6,9 +6,10 @@
 /*global jQuery: false */
 ;(function($){
 "use strict";
+	var ts = $.tablesorter;
 
 	// basic list from http://en.wikipedia.org/wiki/Article_%28grammar%29
-	$.tablesorter.ignoreArticles = {
+	ts.ignoreArticles = {
 		"en" : "the, a, an",
 		"de" : "der, die, das, des, dem, den, ein, eine, einer, eines, einem, einen",
 		"nl" : "de, het, de, een",
@@ -24,7 +25,7 @@
 	// and then set the language id 'xx' in the headers option
 	// ignoreArticles : 'xx'
 
-	$.tablesorter.addParser({
+	ts.parser.add({
 		id: 'ignoreArticles',
 		is: function() {
 			return false;
@@ -35,8 +36,8 @@
 				// initialize - save regex in c.headers[cellIndex].ignoreArticles
 				if (!c.headers) { c.headers = {}; }
 				if (!c.headers[cellIndex]) { c.headers[cellIndex] = {}; }
-				lang = $.tablesorter.getData(c.$headers.eq(cellIndex), c.headers[cellIndex], 'ignoreArticles');
-				art = ($.tablesorter.ignoreArticles[lang] || "the, a, an" ) + "";
+				lang = ts.utility.getData(c.$headers.eq(cellIndex), c.headers[cellIndex], 'ignoreArticles');
+				art = (ts.ignoreArticles[lang] || "the, a, an" ) + "";
 				c.headers[cellIndex].ignoreArticlesRegex = new RegExp('^(' + $.trim( art.split(/\s*\,\s*/).join('\\s|') + "\\s" ).replace("_\\s","") + ')', 'i');
 			}
 			return (s || '').replace(c.headers[cellIndex].ignoreArticlesRegex, '');

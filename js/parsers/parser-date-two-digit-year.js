@@ -12,12 +12,10 @@
 	// if the 2 digit year is 50 (2050 - 2020 < 50), then it becomes 2050.
 	range = 50;
 
-	ts.dates = $.extend({}, ts.dates, {
-		regxxxxyy: /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/,
-		regyyxxxx: /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/
-	});
+	ts.regex.date_xxxxyy = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/;
+	ts.regex.date_yyxxxx = /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/;
 
-	ts.formatDate = function(s, regex, format){
+	ts.utility.formatDate = function(s, regex, format){
 		s = s
 			// replace separators
 			.replace(/\s+/g," ").replace(/[-.,]/g, "/")
@@ -34,38 +32,38 @@
 		return d.setFullYear(y);
 	};
 
-	$.tablesorter.addParser({
+	ts.parser.add({
 		id: "ddmmyy",
 		is: function() {
 			return false;
 		},
 		format: function(s) {
 			// reformat dd/mm/yy to mm/dd/19yy;
-			return ts.formatDate(s, ts.dates.regxxxxyy, "$2/$1/19$3");
+			return ts.utility.formatDate(s, ts.regex.date_xxxxyy, "$2/$1/19$3");
 		},
 		type: "numeric"
 	});
 
-	$.tablesorter.addParser({
+	ts.parser.add({
 		id: "mmddyy",
 		is: function() {
 			return false;
 		},
 		format: function(s) {
 			// reformat mm/dd/yy to mm/dd/19yy
-			return ts.formatDate(s, ts.dates.regxxxxyy, "$1/$2/19$3");
+			return ts.utility.formatDate(s, ts.regex.date_xxxxyy, "$1/$2/19$3");
 		},
 		type: "numeric"
 	});
 
-	$.tablesorter.addParser({
+	ts.parser.add({
 		id: "yymmdd",
 		is: function() {
 			return false;
 		},
 		format: function(s) {
 			// reformat yy/mm/dd to mm/dd/19yy
-			return ts.formatDate(s, ts.dates.regyyxxxx, "$2/$3/19$1");
+			return ts.utility.formatDate(s, ts.regex.date_yyxxxx, "$2/$3/19$1");
 		},
 		type: "numeric"
 	});

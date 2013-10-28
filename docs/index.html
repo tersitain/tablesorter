@@ -1358,8 +1358,6 @@ $(function(){
 					In version 2.1, all widget options have been moved into this option. This is a move to store all widget specific options in one place so as not to polute the main table options. All current widgets have been modified to use this new option. (v2.1).
 					<div class="collapsible">
 					<br>
-					Previously documented widget options <a href="#widgetzebra"><code>widgetZebra</code></a>, <a href="#widgetcolumns"><code>widgetColumns</code></a> and <a href="#widgetuitheme"><code>widgetUitheme</code></a> will be retained for backwards compatibility.<br>
-					<br>
 					Use the <a href="#widgetoptions"><code>widgetOptions</code></a> option as follows, please note that each option is followed by a comma (except the last one):
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
@@ -1453,84 +1451,6 @@ $(function(){
 			</tr>
 		</tbody>
 
-		<!-- non-sorting tbody -->
-		<tbody id="deprecated" class="tablesorter-infoOnly">
-			<tr><th colspan="5">Deprecated Options</th></tr>
-		</tbody>
-
-		<tbody>
-			<tr id="widgetcolumns">
-				<td><a href="#" class="toggle2 deprecated">widgetColumns</a></td>
-				<td>Object with Array</td>
-				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
-				<td>
-					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
-					<div class="collapsible">
-					<br>
-					When the column styling widget is initialized, it automatically applied the default class names of <code>&quot;primary&quot;</code> for the primary sort, <code>&quot;secondary&quot;</code> for the next sort, <code>&quot;tertiary&quot;</code> for the next sort, and so on (add more as needed)... (v2.0.17).
-					Use the <a href="#widgetcolumns"><code>widgetColumns</code></a> option to change the css class name as follows:
-					<pre class="prettyprint lang-javascript">$(function(){
-  $("table").tablesorter({
-    widgets: ["columns"], // initialize column styling of the table
-    widgetColumns: { css: ["primary", "secondary", "tertiary" ] }
-  });
-});</pre></div>
-				</td>
-				<td></td>
-			</tr>
-
-			<tr id="widgetuitheme">
-				<td><a href="#" class="toggle2 deprecated">widgetUitheme</a></td>
-				<td>Object with Array</td>
-				<td>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</td>
-				<td>
-					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
-					<div class="collapsible">
-					<br>
-					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code>&quot;ui-icon-arrowthick-2-n-s&quot;</code> for the unsorted column, <code>&quot;ui-icon-arrowthick-1-s&quot;</code> for the descending sort and <code>&quot;ui-icon-arrowthick-1-n&quot;</code> for the ascending sort. (v2.0.9).
-					Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
-					<br>
-					Use the <a href="#widgetuitheme"><code>widgetUitheme</code></a> option to change the css class name as follows:
-					<pre class="prettyprint lang-javascript">$(function(){
-  $("table").tablesorter({
-    widgets: ["uitheme"], // initialize ui theme styling widget of the table
-    widgetUitheme: {
-      css: [
-        "ui-icon-carat-2-n-s", // Unsorted icon
-        "ui-icon-carat-1-s",   // Sort up (down arrow)
-        "ui-icon-carat-1-n"    // Sort down (up arrow)
-      ]
-    }
-  });
-});</pre></div>
-				</td>
-				<td></td>
-			</tr>
-
-			<tr id="widgetzebra">
-				<td><a href="#" class="toggle2 deprecated">widgetZebra</a></td>
-				<td>Object with Array</td>
-				<td>{ css: [ &quot;even&quot;, &quot;odd&quot; ] }</td>
-				<td>
-					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
-					<div class="collapsible">
-					<br>
-					When the zebra striping widget is initialized, it automatically applied the default class names of <code>&quot;even&quot;</code> and <code>&quot;odd&quot;</code>.
-					Use the <a href="#widgetzebra"><code>widgetZebra</code></a> option to change the css class name as follows:
-					<pre class="prettyprint lang-javascript">$(function(){
-  $("table").tablesorter({
-    widgets: ["zebra"], // initialize zebra striping of the table
-    widgetZebra: { css: [ "normal-row", "alt-row" ] }
-  });
-});</pre></div>
-				</td>
-				<td></td>
-			</tr>
-
-		</tbody>
 	</table>
 
 	<a id="Widget-options"></a>
@@ -3698,11 +3618,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
 	<p>tablesorter has been tested successfully in the following browsers with Javascript enabled:</p>
 	<ul>
-		<li>Firefox 2+</li>
-		<li>Internet Explorer 6+</li>
-		<li>Safari 2+</li>
+		<li>Firefox 4+</li>
+		<li>Internet Explorer 9+</li>
+		<li>Safari 3+</li>
 		<li>Opera 9+</li>
-		<li>Konqueror</li>
+		<li>Konqueror?</li>
 	</ul>
 
 	<p><a class="external" href="http://jquery.com/browser-support/">jQuery Browser Compatibility</a></p>

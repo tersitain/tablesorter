@@ -8,7 +8,7 @@
 	/*! Sugar (http://sugarjs.com/dates#comparing_dates)
 	* demo: http://jsfiddle.net/Mottie/abkNM/551/
 	*/
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id: "sugar",
 		is: function() {
 			return false;
@@ -22,7 +22,7 @@
 	/*! Datejs (http://www.datejs.com/)
 	* demo: http://jsfiddle.net/Mottie/abkNM/550/
 	*/
-	$.tablesorter.addParser({
+	$.tablesorter.parser.add({
 		id: "datejs",
 		is: function() {
 			return false;

@@ -1,4 +1,4 @@
-﻿var ipv6parser = $.tablesorter.getParserById('ipv6Address').format,
+﻿var ipv6parser = $.tablesorter.parser.get('ipv6Address').format,
 ipv6test = function(result, str, expect){
 	if (result) {
 		// ok( $.tablesorter.regex.ipv6Validate.test(str), "valid: " + str );
