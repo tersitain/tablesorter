@@ -50,7 +50,8 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Version 3 will be modularized so that the core plugin will only deal with widgets &amp; contain some basic utility functions which are used by various widgets. Yes, this means sorting will also become a widget.
   * This beta version **no longer supports older versions of jQuery**; You now need at least jQuery v1.4.3+ (untested).
   * This is still in beta, so I have yet to rename/reorganize the options.
-  * Documentation has not been updated!
+  * This branch is up-to-date with version 2.13.0.
+  * Documentation, minified files and component.json files have not been updated!
   * Please don't open a new issue, add any comments and/or suggestions to [issue #122](https://github.com/Mottie/tablesorter/issues/122).
   * I am open-minded &amp; I will listen to any and all of your valuable feedback!
 * Plugin restructured to not use "new" - anticipating making the plugin compatible with Zepto.
@@ -62,5 +63,4 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Added basic Zepto support
   * tablesorter appears to function normally - minimum requirements of at least zepto.js, data.js, event.js, selector.js and ajax.js (if loading files).
   * As yet untested with pager, parsers & widgets.
-  * No metadata support is available when using Zepto. I am not going to bother with converting the metadata plugin.
-
+  * No metadata support is available when using Zepto. I am not going to bother with continuing to support or converting the metadata plugin.
