@@ -532,10 +532,11 @@
 		};
 
 		$this.appender = function(table, rows) {
-			var c = table.config, p = c.pager;
+			var c = table.config,
+				p = c.pager;
 			if ( !p.ajax ) {
 				c.rowsCopy = rows;
-				p.totalRows = rows.length;
+				p.totalRows = p.countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
 				p.size = c.$table.data('pagerLastSize') || p.size;
 				p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 				renderTable(table, rows, p);
