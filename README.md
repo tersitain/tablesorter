@@ -44,6 +44,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v3.0">Version 3.0.1 beta</a> (11/2/2013)
+
+* Updated with changes made to v2.13.1 &amp; v2.13.2.
+  * updated filter widget
+  * pager plugin &amp; pager widget (countChildRows)
+  * editable widget
+
 #### <a name="v3.0">Version 3.0.0 beta</a>
 
 * Note!
